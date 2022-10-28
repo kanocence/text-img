@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h2>上传图片</h2>
+    <h2>选择图片</h2>
     <UploadComp @upload="handleUpload" />
     <h2>设置参数</h2>
     <SettingForm v-model:data="form" />
-    <h2>结果下载</h2>
+    <h2>预览&下载</h2>
     <ResImage :data="textColor" :setting="form" />
   </div>
 </template>
