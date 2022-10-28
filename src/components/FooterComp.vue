@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { StarFilled, Link } from "@element-plus/icons-vue";
+import { StarFilled, Link } from '@element-plus/icons-vue'
 </script>
 <style lang="scss" scoped>
 .footer {

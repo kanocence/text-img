@@ -20,24 +20,24 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed } from 'vue'
 
-const emits = defineEmits(["update:data"]);
+const emits = defineEmits(['update:data'])
 const props = defineProps({
   data: {
     type: Object,
     default: () => ({}),
   },
-});
+})
 
 const form = computed({
   get() {
-    return props.data;
+    return props.data
   },
   set(val) {
-    emits("update:data", val);
+    emits('update:data', val)
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 .setting-form {

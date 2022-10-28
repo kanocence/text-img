@@ -9,22 +9,22 @@
   </div>
 </template>
 <script lang="ts" setup>
-import UploadComp from "./UploadComp.vue";
-import SettingForm from "./SettingForm.vue";
-import ResImage from "./ResImage.vue";
-import { reactive, ref } from "vue";
-import { getTextColor } from "../utils/helper";
+import UploadComp from './UploadComp.vue'
+import SettingForm from './SettingForm.vue'
+import ResImage from './ResImage.vue'
+import { reactive, ref } from 'vue'
+import { getTextColor } from '../utils/helper'
 
-const textColor = ref<string[][]>([]);
+const textColor = ref<string[][]>([])
 const form = reactive({
-  text: "你先别急",
+  text: '你先别急',
   fontSize: 12,
-  backgroundColor: "#212529",
-});
+  backgroundColor: '#212529',
+})
 
 const handleUpload = (data: ImageData) => {
-  textColor.value = getTextColor(data, form.fontSize);
-};
+  textColor.value = getTextColor(data, form.fontSize)
+}
 </script>
 <style lang="scss" scoped>
 h2 {

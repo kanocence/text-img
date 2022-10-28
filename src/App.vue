@@ -9,8 +9,8 @@
   </el-container>
 </template>
 <script lang="ts" setup>
-import MainComp from "./components/MainComp.vue";
-import FooterComp from "./components/FooterComp.vue";
+import MainComp from './components/MainComp.vue'
+import FooterComp from './components/FooterComp.vue'
 </script>
 <style lang="scss" scoped>
 .layout-main {
