@@ -22,15 +22,12 @@
     <el-dialog v-model="dialogVisible">
       <el-image :src="dialogImageUrl" alt="Preview Image" />
     </el-dialog>
-    <!-- canvas -->
-    <canvas v-show="false" ref="canvas"></canvas>
   </div>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage, genFileId } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
-import { gaussianBlur } from '../utils/helper'
 
 import type {
   UploadFile,
@@ -45,10 +42,6 @@ const upload = ref<UploadInstance>()
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
 const fileList = ref<UploadFile[]>([])
-const img = new Image()
-const canvas = ref<HTMLCanvasElement | null>(null)
-const ctx = ref<CanvasRenderingContext2D | null>(null)
-const imageData = ref<ImageData | null>(null)
 
 const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!
@@ -69,28 +62,7 @@ const handleChange: UploadProps['onChange'] = (file, fileList) => {
     ElMessage.error('Please upload image file!')
   }
   if (file.raw) {
-    // 获取图片尺寸
-    const reader = new FileReader()
-    reader.readAsDataURL(file.raw)
-    reader.onload = (e) => {
-      if (e.target) {
-        img.src = e.target.result as string
-        img.onload = () => {
-          const { width, height } = img
-          canvas.value = document.querySelector('canvas')
-          ctx.value = canvas.value?.getContext('2d', {
-            willReadFrequently: true,
-          })!
-          canvas.value?.setAttribute('width', width.toString())
-          canvas.value?.setAttribute('height', height.toString())
-          ctx.value?.drawImage(img, 0, 0, width, height)
-          imageData.value = ctx.value?.getImageData(0, 0, width, height)!
-          emits('upload', gaussianBlur(imageData.value, 2))
-          // ctx.value?.putImageData(gaussianBlur(imageData.value, 2), 0, 0);
-          ctx.value?.clearRect(0, 0, width, height)
-        }
-      }
-    }
+    emits('upload', file.raw)
   }
 }
 </script>

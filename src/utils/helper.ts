@@ -98,100 +98,59 @@ export const gaussianBlur = (
 }
 
 /**
- * 根据行列获取RGBA
- * @param imgData 图像数据
- * @param x 行
- * @param y 列
- * @returns {RGBA} RGBA
+ * 计算文字的颜色
+ * @param data 图像数据
+ * @param fontSize 字体大小
+ * @returns
  */
-const getRGBA = (imgData: ImageData, x: number, y: number): RGBA => {
-  const width = imgData.width
-  const pixes = imgData.data
-  const index = y * width * 4 + x * 4
-  return [pixes[index], pixes[index + 1], pixes[index + 2], pixes[index + 3]]
-}
-
-/**
- * 根据文字大小拆分图像
- * @param imgData 图像数据
- * @param fontSize 文字大小
- * @returns {Area[][]} 采样后的图像数据
- */
-const sampl = (imgData: ImageData, fontSize: number): Area[][] => {
-  const width = imgData.width
-  const height = imgData.height
-  const colunms = Math.floor(width / fontSize)
-  const rows = Math.floor(height / fontSize)
-
-  const samplData: Area[][] = []
-
-  for (let i = 0; i < rows; i++) {
-    const sampleRow: Area[] = []
-    for (let j = 0; j < colunms; j++) {
-      const x = j * fontSize
-      const y = i * fontSize
-      const area: Area = []
-      for (let k = 0; k < fontSize; k++) {
-        const row: RGBA[] = []
-        for (let l = 0; l < fontSize; l++) {
-          const rgba = getRGBA(imgData, x + k, y + l)
-          row.push(rgba)
-        }
-        area.push(row)
-      }
-      sampleRow.push(area)
-    }
-    samplData.push(sampleRow)
-  }
-
-  return samplData
-}
-
-// 计算区域的平均色
-const getAverage = (area: Area): RGBA => {
-  let r = 0
-  let g = 0
-  let b = 0
-  let a = 0
-  let count = 0
-  area.forEach((row) => {
-    row.forEach((rgba) => {
-      r += rgba[0]
-      g += rgba[1]
-      b += rgba[2]
-      a += rgba[3]
-      count++
-    })
-  })
-  return [r / count, g / count, b / count, a / count]
-}
-
-// 计算每个文字的颜色
-const textColors = (samplData: Area[][]): string[][] => {
-  const colors: string[][] = []
-  samplData.forEach((row) => {
-    const colorRow: string[] = []
-    row.forEach((area) => {
-      const average = getAverage(area)
-      colorRow.push(`rgba(${average.join(',')})`)
-    })
-    colors.push(colorRow)
-  })
-  return colors
-}
-
 export const getTextColor = (
   data: ImageData,
   fontSize: number = 12
 ): string[][] => {
-  const samplData = sampl(data, fontSize)
-  return textColors(samplData)
+  const width = data.width
+  const height = data.height
+  const colunms = Math.floor(width / fontSize)
+  const rows = Math.floor(height / fontSize)
+
+  const getRGBA = (imgData: ImageData, x: number, y: number): RGBA => {
+    const width = imgData.width
+    const pixes = imgData.data
+    const index = y * width * 4 + x * 4
+    return [pixes[index], pixes[index + 1], pixes[index + 2], pixes[index + 3]]
+  }
+
+  const colors: string[][] = []
+
+  for (let i = 0; i < rows; i++) {
+    const colorRow: string[] = []
+    for (let j = 0; j < colunms; j++) {
+      const x = j * fontSize
+      const y = i * fontSize
+      let r = 0
+      let g = 0
+      let b = 0
+      let a = 0
+      let count = 0
+      for (let k = 0; k < fontSize; k++) {
+        for (let l = 0; l < fontSize; l++) {
+          const rgba = getRGBA(data, x + k, y + l)
+          r += rgba[0]
+          g += rgba[1]
+          b += rgba[2]
+          a += rgba[3]
+          count++
+        }
+      }
+      colorRow.push(`rgba(${r / count},${g / count},${b / count},${a / count})`)
+    }
+    colors.push(colorRow)
+  }
+
+  return colors
 }
 
 /** 一个像素点的rgba */
 type RGBA = [number, number, number, number]
-/** 一个文字大小区域的像素 */
-type Area = RGBA[][]
 
 export default {
   gaussianBlur,
